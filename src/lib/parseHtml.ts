@@ -1,4 +1,6 @@
 import * as cheerio from "cheerio";
+import url from "url";
+
 interface TrafficUsage {
   currentUsage: string;
   maxUsage: string;
@@ -63,8 +65,9 @@ export const parseConfigs = (html: string): ParseResult => {
           $(td)
             .find("a")
             .each((_, e) => {
+              // console.log($(td).html());
               const href = $(e).attr("href");
-              if (href) row[row.length - 1] = getPathnameFromUrl(href);
+              if (href) row[row.length - 1] = getParseUrl(href);
             });
         });
       result.table.push({
@@ -80,9 +83,38 @@ export const parseConfigs = (html: string): ParseResult => {
 
   return result;
 };
-const getPathnameFromUrl = (inputUrl: string | URL): string => {
-  const parsedUrl = typeof inputUrl === "string" ? new URL(inputUrl) : inputUrl;
-  return inputUrl
-    .toString()
-    .replace(parsedUrl.protocol + "//" + parsedUrl.hostname, "");
+
+enum Protocols {
+  HTTP = "http",
+  HTTPS = "https",
+  VLESS = "vless",
+  VMESS = "VMESS",
+  CLASH = "clash",
+  SSH = "SSH",
+}
+const getParseUrl = (inputUrl: string | URL): string => {
+  inputUrl = inputUrl.toString();
+  if (inputUrl.startsWith(Protocols.CLASH)) {
+    let regex = /http.*/;
+    let extractedPart = inputUrl.match(regex);
+
+    if (extractedPart) {
+      inputUrl = extractedPart[0];
+    }
+
+    if (inputUrl.includes("&") && !inputUrl.includes("?")) {
+      inputUrl = inputUrl.replace("&", "?");
+    }
+  }
+
+  if (inputUrl.startsWith(Protocols.HTTP)) {
+    const httpUrl = url.parse(inputUrl);
+    let parseUrl = httpUrl.pathname ? httpUrl.pathname : "";
+    if (httpUrl.query) {
+      parseUrl += "?" + httpUrl.query;
+    }
+    return parseUrl;
+  }
+
+  return inputUrl;
 };

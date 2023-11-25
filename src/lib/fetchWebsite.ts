@@ -17,7 +17,7 @@ export async function getUserPanel(
 ): Promise<string> {
   try {
     const response = await axios({
-      url: `https://${process.env.URL}/${password}/${uuid}/`,
+      url: `https://${process.env.WEB_URL}/${password}/${uuid}/`,
       method: "get",
       timeout: 10000,
       headers,
@@ -30,18 +30,20 @@ export async function getUserPanel(
 }
 
 export async function getUserConfig(path: string): Promise<string> {
-  console.log(`https://${process.env.URL}/${path}`);
+  const configUrl = `https://${process.env.WEB_URL}${path}`;
+  console.log(configUrl);
 
-  try {
-    const response = await axios({
-      url: `https://${process.env.URL}/${path}`,
-      method: "get",
-      timeout: 10000,
-      headers,
+  return await axios({
+    url: configUrl.trim(),
+    method: "get",
+    timeout: 10000,
+    headers,
+  })
+    .then((res) => {
+      // console.log(res.data);
+      return res.data;
+    })
+    .catch((error) => {
+      console.log(`getUserConfig:${error}`);
     });
-    return response.data;
-  } catch (error) {
-    console.error("Error:", error);
-    throw error;
-  }
 }

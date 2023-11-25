@@ -79,54 +79,60 @@ const ConfigTable = ({ data }: props) => {
             </TableRow>
           </TableHead>
           <TableBody>
-            {data.map((row, index) => (
-              <TableRow
-                key={index}
-                sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
-              >
-                <TableCell component="th" scope="row">
-                  <Box
-                    display="flex"
-                    alignItems="center"
-                    justifyContent="start"
-                  >
-                    <Button
-                      variant="outlined"
-                      sx={{ marginRight: 1 }}
-                      onClick={() => openPanel(row.link)}
+            {data
+              .sort((a, b) =>
+                a.type.localeCompare(b.type) === 0
+                  ? a.name.localeCompare(b.name)
+                  : a.type.localeCompare(b.type)
+              )
+              .map((row, index) => (
+                <TableRow
+                  key={index}
+                  sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
+                >
+                  <TableCell component="th" scope="row">
+                    <Box
+                      display="flex"
+                      alignItems="center"
+                      justifyContent="start"
                     >
-                      <QrCodeIcon />
-                    </Button>
-                    {row.name}
-                  </Box>
-                </TableCell>
-                <TableCell align="left">{row.type}</TableCell>
-                <TableCell
-                  align="left"
-                  sx={{ display: { xs: "none", sm: "table-cell" } }}
-                >
-                  {row.domain}
-                </TableCell>
-                <TableCell
-                  align="left"
-                  sx={{ display: { xs: "none", sm: "table-cell" } }}
-                >
-                  {row.protocol}
-                </TableCell>
-                <TableCell
-                  align="left"
-                  sx={{ display: { xs: "none", md: "table-cell" } }}
-                >
-                  {row.transport}
-                </TableCell>
-                <TableCell
-                  align="left"
-                  sx={{ display: { xs: "none", lg: "table-cell" } }}
-                >
-                  {row.security}
-                </TableCell>
-              </TableRow>
-            ))}
+                      <Button
+                        variant="outlined"
+                        sx={{ marginRight: 1 }}
+                        onClick={() => openPanel(row.link)}
+                      >
+                        <QrCodeIcon />
+                      </Button>
+                      {row.name}
+                    </Box>
+                  </TableCell>
+                  <TableCell align="left">{row.type}</TableCell>
+                  <TableCell
+                    align="left"
+                    sx={{ display: { xs: "none", sm: "table-cell" } }}
+                  >
+                    {row.domain}
+                  </TableCell>
+                  <TableCell
+                    align="left"
+                    sx={{ display: { xs: "none", sm: "table-cell" } }}
+                  >
+                    {row.protocol}
+                  </TableCell>
+                  <TableCell
+                    align="left"
+                    sx={{ display: { xs: "none", md: "table-cell" } }}
+                  >
+                    {row.transport}
+                  </TableCell>
+                  <TableCell
+                    align="left"
+                    sx={{ display: { xs: "none", lg: "table-cell" } }}
+                  >
+                    {row.security}
+                  </TableCell>
+                </TableRow>
+              ))}
           </TableBody>
         </Table>
       </TableContainer>

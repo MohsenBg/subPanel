@@ -1,3 +1,4 @@
+"use client";
 import * as React from "react";
 import QRCode from "react-qr-code";
 import DialogTitle from "@mui/material/DialogTitle";
@@ -15,7 +16,9 @@ function QRcodePanel(props: SimpleDialogProps) {
   const { onClose, open, url } = props;
 
   const onCopyClick = () => {
-    navigator.clipboard.writeText(url);
+    navigator.clipboard.writeText(
+      url.startsWith("/") ? window.location.origin + url : url
+    );
     // Alert the copied text
     alert("Copied the text");
   };
@@ -47,7 +50,7 @@ function QRcodePanel(props: SimpleDialogProps) {
             width: "100%",
             margin: "30px 0",
           }}
-          value={url}
+          value={url.startsWith("/") ? window.location.origin + url : url}
           viewBox={`0 0 256 256`}
         />
       </Box>

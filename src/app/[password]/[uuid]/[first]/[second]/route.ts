@@ -1,13 +1,12 @@
 import { getUserConfig } from "@/lib/fetchWebsite";
 import { HttpStatusCode } from "axios";
 import { NextRequest, NextResponse } from "next/server";
-import stripJsonComments from "strip-json-comments";
 import url from "url";
 
 export async function GET(request: NextRequest) {
   try {
     const fullUrl = url.parse(request.url);
-    const parseUrl = `${fullUrl.pathname + "?" + fullUrl.query}`;
+    const parseUrl = fullUrl.path;
 
     if (!parseUrl) {
       return NextResponse.json(
@@ -23,15 +22,15 @@ export async function GET(request: NextRequest) {
     });
 
     if (fullUrl.pathname?.endsWith("json")) {
-      const jsonWithoutComments = stripJsonComments(data);
-      response = new Response(jsonWithoutComments, {
+      // const jsonWithoutComments = stripJsonComments(data);
+      response = new Response(JSON.stringify(data), {
         headers: { "Content-Type": "application/json" },
       });
     }
 
     return response;
   } catch (error) {
-    console.error("Error:", error);
+    console.error(error);
     return NextResponse.json(
       { message: "Internal Server Error" },
       { status: HttpStatusCode.InternalServerError }

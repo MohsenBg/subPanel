@@ -5,13 +5,7 @@ import { UserPanelData } from "@/interface/ISubPanel";
 import TrafficUsage from "@/component/Home/TrafficUsage";
 import ConfigTable from "@/component/Home/ConfigTable";
 import { convertTextToFloat } from "@/lib/utilities";
-import {
-  Alert,
-  Box,
-  CircularProgress,
-  Typography,
-  autocompleteClasses,
-} from "@mui/material";
+import { Alert, Box, CircularProgress, Typography } from "@mui/material";
 const SubPanel = ({
   params,
 }: {
@@ -35,6 +29,7 @@ const SubPanel = ({
         })
         .then((res) => {
           setPanelData(res.data);
+          //   console.log(res.data);
         })
         .catch((err) => {
           console.log(`${err}`);
@@ -69,7 +64,7 @@ const SubPanel = ({
       setProgress((prevProgress) =>
         prevProgress >= 100
           ? 100
-          : Math.min(prevProgress + Math.random() * 5, 100)
+          : Math.min(prevProgress + Math.random() * 3, 100)
       );
     }, 200);
     return () => clearTimeout(progressTimer);
